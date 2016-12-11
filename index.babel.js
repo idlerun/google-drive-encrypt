@@ -4,10 +4,8 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 
-import server from './src/server';
-
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
 
 app.set('port', port);
 app.set('trust_proxy', 1);
@@ -47,8 +45,6 @@ if (isDevelopment) {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
   });
 }
-
-server(app);
 
 app.listen(port, function () {
    console.info('Listening on port ' + port);
