@@ -107,20 +107,21 @@ module.exports = React.createClass({
     const cannotDecrypt = ("Incorrect Password");
     this.state.items.forEach(item => {
       if (item.meta) {
-        const meta = JSON.stringify(item.meta, null, ' ');
         const key = this.keyFor(item);
         if (this.isCorrectKey(item,key)) {
           const decName = this.decryptName(item, key);
           rows.push(
             <tr key={item.id}>
-              <td><pre>{meta}</pre></td>
+              <td>{item.meta.name}</td>
+              <td>Password OK!</td>
               <td><a href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
             </tr>);
         } else {
           rows.push(
             <tr key={item.id}>
-              <td><pre>{meta}</pre></td>
-              <td>Incorrect Key</td>
+              <td>{item.meta.name}</td>
+              <td>Incorrect Password</td>
+              <td>Not Possible</td>
             </tr>);
         }
       }
@@ -128,17 +129,23 @@ module.exports = React.createClass({
 
     return (
       <div>
-        <label>Password: </label>
-        <input type="password" value={this.state.password} onChange={event => this.setState({password:event.target.value})}></input>
-        <table>
-          <thead>
-            <tr>
-              <th>File Attributes</th>
-              <th>Decrypted</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </table>
+        <h1>Google Drive Encryption</h1>
+        <h2>File Download</h2>
+        <div>
+          <p>Enter a password to be used for encrypting your files. This must be the same password which was used during upload.</p>
+          <label>Password: </label>
+          <input type="password" value={this.state.password} onChange={event => this.setState({password:event.target.value})}></input>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Status</th>
+                <th>Download</th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </table>
+        </div>
       </div>
     );
   }
