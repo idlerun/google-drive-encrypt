@@ -39,8 +39,9 @@ module.exports = {
   ],
   module: {
     loaders: [
+      { test: /\.png$/, loader: 'ignore-loader' },
       { test: /\.js?$/, exclude: /node_modules/, loader: 'babel-loader' },
-      { test: /\.s(a|c)ss$/, loaders: ["style", "css", "sass"], include: /src/ }
+      { test: /\.sass$/, loaders: ["style-loader", "css-loader", "sass-loader"], include: /src/ }
     ]
   }
 };

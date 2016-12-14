@@ -33,8 +33,9 @@ module.exports = {
   ],
   module: {
     loaders: [
+      { test: /\.png$/, loader: 'ignore-loader' },
       { test: /\.js?$/, exclude: /node_modules/, loader: 'babel-loader' },
-      { test: /\.s(a|c)ss$/, loaders: ["style-loader", "css?sourceMap", "sass?sourceMap&indentedSyntax"], include: /src/ }
+      { test: /\.sass$/, loaders: ["style-loader", "css-loader?sourceMap", "sass-loader?sourceMap&indentedSyntax"], include: /src/ }
     ]
   }
 };

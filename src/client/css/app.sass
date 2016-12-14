@@ -1,20 +1,172 @@
 @import "~normalize.css/normalize.css"
 
+iframe
+  border: none;
+
+h2
+  color: #444;
+  margin-top: 0;
+
+h3
+  color: #444;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+
+.usage
+  img
+    margin-left: 10px;
+    width: 500px;
+
+.faq
+  p
+    margin-top: 0.5em;
+
+a.toDrive
+  img
+    display: block;
+  p
+    margin: 10px 0 0 0;
+  display: block;
+  padding: 30px;
+  border-radius: 10px;
+  background-color: #f5f5f5;  
+  border: 2px solid #e0e0e0;
+  color: #333;
+  &:hover
+    text-decoration: none;
+    border: 2px solid #d0d0d0;
+    background-color: #eef;
+
+.usageFaqBlock
+  margin-top: 20px;
+  a
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    margin: 10px 10px 0 0;
+    font-size: 20px;
+    display: inline-block;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    color: #333;
+    &:hover
+      text-decoration: none;
+      border: 2px solid #d0d0d0;
+      background-color: #eef;
+
+*
+  box-sizing: border-box;
+
+body
+  width: 640px;
+  position: absolute;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%)
+  font-family: Helvetica
+
+li
+  margin-top: 5px;
+
+a
+  text-decoration: none;
+  &:hover
+    text-decoration: underline;
+
+#heading
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  margin: 30px;
+  text-align : center
+  img
+    width: 64px;
+    position: absolute;
+    top: 35px;
+    left: 70px;
+  h1
+    color: #444;
+    font-size: 40px;
+    margin-bottom: 0;
+  p
+    color: #444;
+    font-size: 17px;
+    margin-top: 0.5em;
+
+#content
+  background-color: #fbfbfb;
+  -webkit-box-shadow: 2px 2px 5px 3px rgba(160,160,160,1);
+  -moz-box-shadow: 2px 2px 5px 3px rgba(160,160,160,1);
+  box-shadow: 2px 2px 5px 3px rgba(160,160,160,1);
+
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid gray;
+
+table
+  width: 100%
+
 table, th, td
-  border: 1px solid black;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ddd;
   border-collapse: collapse;
+
+label
+  display: inline-block
+  color: #444;
+  font-weight: 400;
+  font-size: 16px;
+
+.textPrompt
+  input
+    display: block;
+    width: 100%;
+    font-size: 30px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+
+.checkboxPrompt
+  input
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+
+.details
+  margin: 5px 0 15px 0;
+  color: #555;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  border: 1px solid #eee;
+  border-radius: 5px;
   padding: 5px;
+  font-weight: 300;
 
-pre
-  font-size: 10px;
-
-
-.dz
-  margin: 10px;
+.dz-wait, .dz
+  margin-top: 20px;
   padding: 10px;
   min-height: 100px;
   height: auto;
   border: 2px dashed #666;
+
+.dz-wait
+  background-color: #ddd;
+  div
+    color: #622;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
+
+.dz
+  .dz-empty
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
+  table
+    width: 100%;
 
 .dz-active
   border-style: solid;
@@ -23,3 +175,15 @@ pre
 .dz-reject
   borderStyle: solid;
   background: #ffdddd;
+
+.encLink
+  font-weight: bold;
+  color: #00f;
+  text-decoration: underline;
+
+.dl-list
+  th:not(:last-child), td:not(:last-child)
+    white-space: nowrap;
+
+  th:last-child, td:last-child
+      width: 100%;

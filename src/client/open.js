@@ -1,10 +1,10 @@
 import React from 'react';
 import $ from 'jquery';
-import params from './params'
-import {CLIENT_ID} from './constants'
+import params from './components/params'
+import {CLIENT_ID} from './components/constants'
 import StreamSaver from './vendor/StreamSaver';
 
-const Crypto = require('./crypto');
+const Crypto = require('./components/crypto');
 
 module.exports = React.createClass({
 
@@ -110,7 +110,7 @@ module.exports = React.createClass({
             <tr key={item.id}>
               <td>{item.meta.name}</td>
               <td>Password OK!</td>
-              <td><a href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
+              <td><a className="encLink" href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
             </tr>);
         } else {
           rows.push(
@@ -125,17 +125,23 @@ module.exports = React.createClass({
 
     return (
       <div>
-        <h1>Drive Encryption</h1>
         <h2>File Download</h2>
         <div>
-          <p>Enter a password to be used for encrypting your files. This must be the same password which was used during upload.</p>
-          <label>Password: </label>
-          <input type="password" value={this.state.password} onChange={event => this.setState({password:event.target.value})}></input>
-          <table>
+
+          <div>
+            <div className="textPrompt">
+              <label>Password</label>
+              <input type="password" value={this.state.password}
+                  onChange={event => this.setState({password:event.target.value})}/>
+            </div>
+            <p className="details">Must be the same password used during upload</p>
+          </div>
+
+          <table className="dl-list">
             <thead>
               <tr>
-                <th>File</th>
-                <th>Status</th>
+                <th style={{minWidth: "160px"}}>File</th>
+                <th style={{minWidth: "160px"}}>Status</th>
                 <th>Download</th>
               </tr>
             </thead>
