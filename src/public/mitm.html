@@ -1,0 +1,28 @@
+<!-- FROM https://github.com/jimmywarting/StreamSaver.js -->
+<script>
+if (window.location.hostname != 'localhost' && 
+    window.location.hostname != '127.0.0.1' && 
+    window.location.protocol != "https:"){
+  window.location.protocol = "https:"
+}
+window.onmessage = event => {
+  let {data, ports} = event
+  if(!ports || !ports.length)
+      throw new TypeError("Did not receive a messageChannel")
+
+  navigator.serviceWorker.getRegistration('./').then(swReg => {
+    return swReg || navigator.serviceWorker.register('sw.js', {scope: './'})
+  }).then(swReg => {
+    let swRegTmp = swReg.installing || swReg.waiting
+    if (swReg.active)
+      return swReg.active.postMessage(data, [ports[0]])
+
+    swRegTmp.onstatechange = () => {
+      if (swRegTmp.state === 'activated')
+        swReg.active.postMessage(data, [ports[0]])
+    }
+  });
+}
+
+opener && opener.postMessage('StreamSaver::loadedPopup', '*')
+</script>

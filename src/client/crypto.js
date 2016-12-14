@@ -26,6 +26,17 @@ CryptoJS.enc.u8array = {
   }
 };
 
+function finalizeU8(cryptor) {
+  const wordsOut = cryptor.finalize();
+  return CryptoJS.enc.u8array.stringify(wordsOut);
+}
+
+function processU8(cryptor, u8in) {
+  const wordsIn = CryptoJS.enc.u8array.parse(u8in);
+  const wordsOut = cryptor.process(wordsIn);
+  return CryptoJS.enc.u8array.stringify(wordsOut);
+}
+
 function blobToWordsPromise(blob) {
   return new Promise(function(resolve, reject) {
     var fileReader = new FileReader();
@@ -43,49 +54,52 @@ function wordsToBlob(words) {
   return new Blob([u8])
 }
 
-function config(iv) {
-  return {
-    iv: iv,
-    padding: CryptoJS.pad.NoPadding,
-    mode: CryptoJS.mode.OFB
-  }
-}
 
-function encryptStr(hexKey, iv, plainValue) {
-  var args = {
-    key: CryptoJS.enc.Hex.parse(hexKey),
-    data: CryptoJS.enc.Utf8.parse(plainValue),
-    iv: CryptoJS.enc.Hex.parse(iv)
-  };
-  var encrypted = CryptoJS.AES.encrypt(args.data, args.key, config(args.iv));
+function encryptStr(hexKey, hexIv, plainValue) {
+  const key = CryptoJS.enc.Hex.parse(hexKey);
+  const data = CryptoJS.enc.Utf8.parse(plainValue);
+  const iv = CryptoJS.enc.Hex.parse(hexIv);
+  var encrypted = CryptoJS.AES.encrypt(data, key, {
+    iv: iv,
+    padding: CryptoJS.pad.Pkcs7,
+    mode: CryptoJS.mode.OFB
+  });
   return encrypted.ciphertext.toString(CryptoJS.enc.Hex);
 }
 
-function encryptor(hexKey, iv) {
-  var args = {
-    key: CryptoJS.enc.Hex.parse(hexKey),
-    iv: CryptoJS.enc.Hex.parse(iv)
-  };
-  return CryptoJS.algo.AES.createEncryptor(args.key, config(args.iv));
-}
 
-function decryptor(hexKey, iv) {
-  var args = {
-    key: CryptoJS.enc.Hex.parse(hexKey),
-    iv: CryptoJS.enc.Hex.parse(iv)
-  };
-  return CryptoJS.algo.AES.createDecryptor(args.key, config(args.iv));
-}
-
-function decryptStr(hexKey, iv, ciphertext) {
-  var args = {
-    key: CryptoJS.enc.Hex.parse(hexKey),
-    ciphertext: CryptoJS.enc.Hex.parse(ciphertext), 
-    iv: CryptoJS.enc.Hex.parse(iv)
-  };
-  var decrypted = CryptoJS.AES.decrypt(args, args.key, config(args.iv));
+function decryptStr(hexKey, hexIv, hexCiphertext) {
+  const key = CryptoJS.enc.Hex.parse(hexKey);
+  const ciphertext = CryptoJS.enc.Hex.parse(hexCiphertext);
+  const iv = CryptoJS.enc.Hex.parse(hexIv);
+  var decrypted = CryptoJS.AES.decrypt({ciphertext}, key, {
+    iv: iv,
+    padding: CryptoJS.pad.Pkcs7,
+    mode: CryptoJS.mode.OFB
+  });
   return decrypted.toString(CryptoJS.enc.Utf8);
 }
+
+function encryptor(hexKey, hexIv) {
+  const key = CryptoJS.enc.Hex.parse(hexKey);
+  const iv = CryptoJS.enc.Hex.parse(hexIv);
+  return CryptoJS.algo.AES.createEncryptor(key, {
+    iv: iv,
+    padding: CryptoJS.pad.NoPadding,
+    mode: CryptoJS.mode.OFB
+  });
+}
+
+function decryptor(hexKey, hexIv) {
+  const key = CryptoJS.enc.Hex.parse(hexKey);
+  const iv = CryptoJS.enc.Hex.parse(hexIv);
+  return CryptoJS.algo.AES.createDecryptor(key, {
+    iv: iv,
+    padding: CryptoJS.pad.NoPadding,
+    mode: CryptoJS.mode.OFB
+  });
+}
+
 
 function random() {
   return CryptoJS.lib.WordArray.random(256/8).toString(CryptoJS.enc.Hex);
@@ -103,4 +117,4 @@ function hash(data) {
   return CryptoJS.SHA256(data).toString(CryptoJS.enc.Hex);
 }
 
-module.exports = { encryptStr, decryptStr, encryptor, decryptor, random, secure_hash, hash, wordsToBlob, blobToWordsPromise };
+module.exports = { encryptStr, decryptStr, encryptor, decryptor, random, secure_hash, hash, wordsToBlob, blobToWordsPromise, finalizeU8, processU8 };

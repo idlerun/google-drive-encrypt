@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "name": "Drive Encryption",
+  "description": "Store encrypted files in your Google Drive",
+  "version": "1.0.1",
+  "container": ["GOOGLE_DRIVE"],
+  "api_console_project_id": "464708669615",
+  "gdrive_mime_types": {
+    "http://drive.google.com/intents/opendrivedoc": [
+      {
+        "type": ["application/vnd.google.drive.ext-type.enc"],
+        "href": "https://drive-encrypt.com/?action=open&ids={ids}",
+        "title": "Open",
+        "disposition": "window"
+      }
+    ]
+  },
+  "app": {
+    "launch": {
+      "web_url": "https://drive-encrypt.com/"
+    }
+  },
+  "icons": {
+    "256": "lock-256.png",
+    "128": "lock-128.png"
+  },
+}

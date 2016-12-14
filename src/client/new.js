@@ -14,7 +14,8 @@ module.exports = React.createClass({
     return {
       password:'',
       uploads: [],
-      uploadIdx: 0
+      uploadIdx: 0,
+      randomName: true
     };
   },
 
@@ -24,10 +25,11 @@ module.exports = React.createClass({
     const salt = Crypto.random();
     const key = Crypto.secure_hash(this.state.password, salt);
     const key_hash = Crypto.hash(key);
-    const name = Crypto.random().substr(48) + ".enc";
-    entry.dstName = name;
+    entry.dstName = this.state.randomName ? 
+          Crypto.random().substr(48) + ".enc" :
+          file.name + ".enc";
     const enc_name = Crypto.encryptStr(key, salt, file.name);
-    const metadata = { name, parents: [params.folderId],
+    const metadata = { name:entry.dstName, parents: [params.folderId],
         properties: {
           salt, key_hash, enc_name
         }};
@@ -36,7 +38,6 @@ module.exports = React.createClass({
       key, iv:salt, file, metadata,
       onComplete: this.onComplete, onError:console.log, onProgress:this.onProgress});
     upl.upload();
-    forceUpdate();
   },
 
 
@@ -55,8 +56,11 @@ module.exports = React.createClass({
 
 
   onProgress(pct) {
-    this.state.uploads[this.state.uploadIdx].progress = Math.round(pct*1000)/10 + "%";
-    this.forceUpdate();
+    const progress = (pct*100).toFixed(1) + "%";
+    if (this.state.uploads[this.state.uploadIdx].progress != progress){
+      this.state.uploads[this.state.uploadIdx].progress = progress;
+      this.forceUpdate();
+    }
   },
 
 
@@ -104,22 +108,30 @@ module.exports = React.createClass({
       );
     } else {
       dropZone = (
-        <div>
-          Enter a password to encrypted file upload
+        <div className="dz">
+          Enter a password to enable encrypted file upload
         </div>
       )
     }
 
     return (
       <div>
-        <h1>Google Drive Encryption</h1>
+        <h1>Drive Encryption</h1>
         <h2>File Upload</h2>
         <div>
           <p>Enter a password to be used for encrypting your files. This same password will be needed to download your files</p>
           <label>Password: </label>
           <input type="password" value={this.state.password}
-              onChange={event => this.setState({password:event.target.value})}>
-          </input>
+              onChange={event => this.setState({password:event.target.value})}/>
+
+        </div>
+        <div>
+          <p>Decide whether you want your Google Drive stored file to have a randomly generated name (hidden), or use the original file name (searchable). The decrypted file will always have the original filename at download.
+          </p>
+          <div onClick={event => this.setState({randomName:!this.state.randomName})}>
+            <label>Random filename: </label>
+            <input type="checkbox" checked={this.state.randomName}/>
+          </div>
         </div>
         {dropZone}
       </div>

@@ -2,10 +2,9 @@ import React from 'react';
 import $ from 'jquery';
 import params from './params'
 import {CLIENT_ID} from './constants'
+import StreamSaver from './vendor/StreamSaver';
 
 const Crypto = require('./crypto');
-window.Crypto = Crypto;
-window.CryptoJS = require('crypto-js');
 
 module.exports = React.createClass({
 
@@ -46,15 +45,14 @@ module.exports = React.createClass({
     fetch("https://www.googleapis.com/drive/v3/files/" + item.id + "/?alt=media", this.gapiParams()).then(res => {
       const key = this.keyFor(item);
       const name = this.decryptName(item, key);
-      const fileStream = streamSaver.createWriteStream(name)
+      const fileStream = StreamSaver.createWriteStream(name)
       const decryptor = Crypto.encryptor(key, item.meta.properties.salt)
       const writer = fileStream.getWriter()
       const reader = res.body.getReader()
       const pump = () => reader.read()
         .then(({ value, done }) => {
           if (done) {
-            const decWords = decryptor.finalize();
-            const u8out = CryptoJS.enc.u8array.stringify(decWords);
+            const u8out = Crypto.finalizeU8(decryptor);
             if (u8out.length > 0) {
               return writer.write(u8out).then(() => { writer.close() });
             } else {
@@ -62,9 +60,7 @@ module.exports = React.createClass({
             }
           } else {
             // value comes in as Uint8Array
-            const wordsIn = CryptoJS.enc.u8array.parse(value);
-            const decWords = decryptor.process(wordsIn);
-            const u8out = CryptoJS.enc.u8array.stringify(decWords);
+            const u8out = Crypto.processU8(decryptor, value);
             if (u8out.length > 0) {
               return writer.write(u8out).then(pump);
             } else {
@@ -102,7 +98,7 @@ module.exports = React.createClass({
 
 
   render() {
-    //console.log("state", this.state);
+    console.log("state", this.state);
     var rows = [];
     const cannotDecrypt = ("Incorrect Password");
     this.state.items.forEach(item => {
@@ -129,7 +125,7 @@ module.exports = React.createClass({
 
     return (
       <div>
-        <h1>Google Drive Encryption</h1>
+        <h1>Drive Encryption</h1>
         <h2>File Download</h2>
         <div>
           <p>Enter a password to be used for encrypting your files. This must be the same password which was used during upload.</p>

@@ -22,15 +22,27 @@ var Main = React.createClass({
     $(window).load(this.init);
   },
 
-  init() {
-    gapi.auth.authorize({
+
+  authorize(immediate, cb) {
+    console.log("Auth with immediate=",immediate);
+    return gapi.auth.authorize({
         'client_id': CLIENT_ID,
         'scope': SCOPES.join(' '),
-        'immediate': true
-      }, this.handleAuthResult);
+        'immediate': immediate,
+        'response_type':'token'}, cb)
+  },
+
+  init() {
+    gapi.client.init({
+      'clientId': CLIENT_ID,
+      'scope': SCOPES.join(' ')
+    }).then(() => {
+      this.authorize(true, this.handleAuthResult);
+    });
   },
 
   handleAuthResult(authResult) {
+    console.log("handleAuthResult", authResult);
     var authorizeDiv = document.getElementById('authorize-div');
     if (authResult && !authResult.error) {
       gapi.client.load('drive', 'v3', () => {this.setState({auth:authResult})});
@@ -41,16 +53,11 @@ var Main = React.createClass({
 
 
   startAuth() {
-    gapi.auth.authorize({
-        'client_id': CLIENT_ID,
-        'scope': SCOPES.join(' '),
-        'immediate': false
-      }, this.handleAuthResult);
+    this.authorize(false).then(this.handleAuthResult);
   },
 
 
   render() {
-    console.log("state",this.state);
     if (this.state.auth == undefined) {
       // checking initial auth state
       return (<div></div>)
@@ -63,66 +70,90 @@ var Main = React.createClass({
       }
     }
 
-    var installMsg = this.state.auth ?
-        (<p>You have Google Drive Encryption installed correctly.</p>) :
-        (<p>Install Google Drive Encryption into your Google Drive by clicking
-           <button onClick={this.startAuth}>Install</button>
-         </p>);
+    /*
+        <div style={{display: chrome.app.isInstalled ? 'none' : 'block'}}>
+          <button onClick={chrome.webstore.install}>Add to Chrome</button>
+        </div>
+
+        <div style={{display: chrome.app.isInstalled ? 'block' : 'none'}}>
+          Chrome App is installed!
+        </div>
+    */
 
     return (
       <div>
-        <h1>Google Drive Encryption</h1>
+        <h1>Drive Encryption</h1>
 
-        <div>
-          <h2>What is this app?</h2>
-          <p>
-            This app provides bank-grade AES256 encryption of individual files in your Google Drive. The names of uploaded files are also encrypted to ensure full privacy of data.
-          </p>
-          <p>
-            All encryption and decryption happens on your own computer (in this browser) before any data gets transferred to Google.
-          </p>
-          <p>
-            No data is sent to our servers. In fact, this site has no server-side component. Everything is running as local code that is already loaded in your browser. Web savvy users can check the Networking tab in debugging tools to verify this.
-          </p>
+        <p>Store encrypted files in your Google Drive</p>
+
+        <div style={{display: this.state.auth ? 'block' : 'none'}}>
+          Google Drive connection is authorized. Please see usage instructions below.
         </div>
+
+        <div style={{display: this.state.auth ? 'none' : 'block'}}>
+          <button onClick={this.startAuth}>Click to allow connection to your Google Drive</button>
+        </div>
+
 
         <div>
           <h2>Usage</h2>
-          {installMsg}
 
           <div>
-            <h3>Start a new upload</h3>
-            <p>
-              Start an Encrypted Upload from Google Drive by locating Google Drive Encryption in the "New" Menu
-            </p>
-            <img style={{width:'400px'}} src="example-create.png"/>
+            <h3>Upload an Encrypted File</h3>
+            <ul>
+              <li>Open the Google Drive folder to which you would like to upload</li>
+              <li>Under the "New" menu, choose "More" then "Drive Encryption"</li>
+              <li>Enter a password for the encrypted uploads in the Password field</li>
+              <li>Drag and drop (or click to select) or or more files to upload</li>
+              <li>Return to Google Drive and verify that the encrypted files are saved as expected</li>
+            </ul>
           </div>
 
           <div>
-            <h3>Upload an encrypted file</h3>
-            <p>
-              Enter an encryption password on the Google Drive Encryption page which opens. Once a password is entered, you will be able to drag and drop (or click to select) files to upload to Google Drive.
-            </p>
-            <p>[[TODO add screen shot]]</p>
-          </div>
-
-          <div>
-            <h3>Open an encrypted file</h3>
-            <p>
-              Locate the .enc file which you would like to open. Right click on the file and choose "Open with Google Drive Encryption"
-            </p>
-            <img style={{width:'500px'}} src="example-open.png"/>
-          </div>
-
-          <div>
-            <h3>Download and decrypt</h3>
-            <p>
-              Enter the correct password for the file and a download link with the correct filename will appear. Click to download the originally uploaded file.
-            </p>
-            <p>[[TODO add screen shot]]</p>
+            <h3>Download an Encrypted File</h3>
+            <ul>
+              <li>In Google Drive, select the '.enc' extension files you would like to access</li>
+              <li>Right click and choose "Open with" then "Drive Encryption"</li>
+              <li>Enter the password which was used to encrypt the files during upload</li>
+              <li>When the correct password is entered, a download link will appear</li>
+              <li>Download any decrypted files you would like</li>
+            </ul>
           </div>
         </div>
-        
+
+
+        <div>
+          <h2>FAQ</h2>
+
+          <div>
+            <h3>What does this app do?</h3>
+            <p>
+              This app provides bank-grade AES256 encryption of individual files in your Google Drive. The names of uploaded files are also encrypted to ensure full privacy of data.
+            </p>
+          </div>
+
+          <div>
+            <h3>Who can see my data?</h3>  
+            <p>
+              Nobody. All encryption and decryption happens on your own computer (in this browser) before any data gets transferred to Google.
+            </p>
+          </div>
+
+          <div>
+            <h3>How does it work?</h3>
+            <p>
+              This app uses cutting edge browser support from Google Chrome to encrypt your files on the fly as they are uploaded to Google Drive and decrypt them during download.
+            </p>
+          </div>
+
+          <div>
+            <h3>How do I know you aren't saving a copy of my files?</h3>
+            <p>
+              No data is sent to our servers at all. In fact, this site doesn't even have backend code.
+            </p>
+            <p>Web savvy users can check the Networking tab in debugging tools to verify what data is leaving the browser</p>
+          </div>
+        </div>
       </div>
     )
   }
