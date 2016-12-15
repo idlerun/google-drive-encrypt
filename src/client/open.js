@@ -98,7 +98,7 @@ module.exports = React.createClass({
 
 
   render() {
-    console.log("state", this.state);
+    //console.log("state", this.state);
     var rows = [];
     const cannotDecrypt = ("Incorrect Password");
     this.state.items.forEach(item => {

@@ -70,7 +70,7 @@ module.exports = React.createClass({
 
 
   render() {
-    console.log(this.state);
+    //console.log(this.state);
 
     if (this.state.uploadIdx < this.state.uploads.length) {
       const up = this.state.uploads[this.state.uploadIdx]
@@ -87,7 +87,7 @@ module.exports = React.createClass({
           </div>
         );
       if (this.state.uploads.length > 0) {
-        console.log("length is >0");
+        //console.log("length is >0");
         var rows = this.state.uploads.map((entry,index) =>
           ( <tr key={index}>
               <td>{entry.file.name}</td>

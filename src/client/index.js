@@ -48,7 +48,7 @@ var Main = React.createClass({
 
 
   authorize(immediate, cb) {
-    console.log("Auth with immediate=",immediate);
+    //console.log("Auth with immediate=",immediate);
     return gapi.auth.authorize({
         'client_id': CLIENT_ID,
         'scope': getScopes(),
@@ -66,7 +66,7 @@ var Main = React.createClass({
   },
 
   handleAuthResult(authResult) {
-    console.log("handleAuthResult", authResult);
+    //console.log("handleAuthResult", authResult);
     var authorizeDiv = document.getElementById('authorize-div');
     if (authResult && !authResult.error) {
       gapi.client.load('drive', 'v3', () => {this.setState({auth:authResult})});
@@ -120,11 +120,16 @@ var Main = React.createClass({
           content = (
             <div>
               <h2>Authentication Required</h2>
-              <p>Your authentication with Google Drive is required: <button onClick={this.startAuth}>Authenticate</button></p>
-              <ul>
-                <li><a href='#usage'>Usage Guide</a></li>
-                <li><a href='#faq'>Frequently Asked Questions</a></li>
-              </ul>
+              <a href="#" onClick={this.startAuth} className="toDrive">
+                <img src="drive_logo.png"/>
+                <p>
+                  Click here to authenticate with your Google Drive
+                </p>
+              </a>
+              <div className="usageFaqBlock">
+                <a href='#usage'>Usage Guide</a>
+                <a href='#faq'>Frequently Asked Questions</a>
+              </div>
             </div>
           )
         }
