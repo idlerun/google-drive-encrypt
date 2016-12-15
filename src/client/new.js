@@ -100,7 +100,7 @@ module.exports = React.createClass({
             <thead>
               <tr>
                 <th>Name</th>
-                <th style={{width:"155px"}}>Status</th>
+                <th style={{minWidth:"155px"}}>Status</th>
                 <th>Destination</th>
               </tr>
             </thead>

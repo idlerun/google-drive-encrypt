@@ -10,12 +10,15 @@ module.exports = React.createClass({
 
   getInitialState() {
     const items = params.ids.split(',').map(function(id){return {id}});
-    return {items, password:''};
+    return {items, password:'', metaQueue:items.slice()};
   },
 
 
   componentWillMount() {
-    this.state.items.forEach(this.loadMeta);
+    // start a few threads loading meta in parallel
+    for(var i=0; i<5; i++){
+      setTimeout(this.loadNextMeta, 0);
+    }
   },
 
 
@@ -30,13 +33,37 @@ module.exports = React.createClass({
     }
   },
 
+  /**
+   * Loading meta too fast will start getting 403 errors
+   */
+  loadNextMeta() {
+    //console.log("loadNextMeta");
+    if (this.state.metaQueue.length > 0) {
+      const item = this.state.metaQueue.shift();
+      return this.loadMeta(item);
+    }
+  },
+
 
   loadMeta(item) {
-    fetch("https://www.googleapis.com/drive/v3/files/" + item.id + "/?fields=name,properties", this.gapiParams()).then(res => {
-      return res.json()
+    //console.log("loadMeta", item);
+    fetch("https://www.googleapis.com/drive/v3/files/" + item.id + "/?fields=name,properties", this.gapiParams())
+    .then(res => {
+      if (res.status == 200) {
+        setTimeout(this.loadNextMeta, 0);
+        return res.json();
+      } else {
+        this.state.metaQueue.push(item);
+        // back off a bit when we get an error
+        setTimeout(this.loadNextMeta, 500);
+        throw 'Fetch failed with response code ' + res.status;
+      }
     }).then(json => {
+      //console.log("meta", item.id, json);
       item.meta = json;
       this.forceUpdate();
+    }).catch(e => {
+      console.log(e);
     });
   },
 
@@ -120,6 +147,13 @@ module.exports = React.createClass({
               <td>Not Possible</td>
             </tr>);
         }
+      } else {
+        rows.push(
+            <tr key={item.id}>
+              <td className="loadingMeta">Loading...</td>
+              <td></td>
+              <td></td>
+            </tr>);
       }
     });
 
@@ -142,7 +176,7 @@ module.exports = React.createClass({
               <tr>
                 <th style={{minWidth: "160px"}}>File</th>
                 <th style={{minWidth: "160px"}}>Status</th>
-                <th>Download</th>
+                <th style={{minWidth: "160px"}}>Download</th>
               </tr>
             </thead>
             <tbody>{rows}</tbody>
