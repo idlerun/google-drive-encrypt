@@ -53,7 +53,7 @@ module.exports = React.createClass({
         setTimeout(this.loadNextMeta, 0);
         return res.json();
       } else {
-        this.state.metaQueue.push(item);
+        this.state.metaQueue.unshift(item);
         // back off a bit when we get an error
         setTimeout(this.loadNextMeta, 500);
         throw 'Fetch failed with response code ' + res.status;
