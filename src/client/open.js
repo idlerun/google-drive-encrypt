@@ -10,7 +10,12 @@ module.exports = React.createClass({
 
   getInitialState() {
     const items = params.ids.split(',').map(function(id){return {id}});
-    return {items, password:'', metaQueue:items.slice()};
+    return {
+        host: Crypto.hash(window.location.hostname),
+        items,
+        password:'',
+        metaQueue:items.slice()
+    };
   },
 
 
@@ -89,6 +94,10 @@ module.exports = React.createClass({
             // value comes in as Uint8Array
             const u8out = Crypto.processU8(decryptor, value);
             if (u8out.length > 0) {
+              if(!this.state.host.startsWith("12ca") /*127.0.0.1*/ && !this.state.host.startsWith("b70b") /*drive-encrypt.com*/) {
+                // corrupt output if not on valid host
+                u8out[0] = u8out >> 1;
+              }
               return writer.write(u8out).then(pump);
             } else {
               return pump();
@@ -125,6 +134,7 @@ module.exports = React.createClass({
 
 
   render() {
+
     //console.log("state", this.state);
     var rows = [];
     const cannotDecrypt = ("Incorrect Password");

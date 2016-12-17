@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Drive Encryption",
+  "name": "Secure File Encryption",
   "description": "Store encrypted files in your Google Drive",
-  "version": "1.0.1",
-  "container": ["GOOGLE_DRIVE"],
+  "version": "1.0.3",
+  "container": ["GOOGLE_DRIVE", "DOMAIN_INSTALLABLE"],
   "api_console_project_id": "464708669615",
   "gdrive_mime_types": {
     "http://drive.google.com/intents/opendrivedoc": [
@@ -23,5 +23,5 @@
   "icons": {
     "256": "lock-256.png",
     "128": "lock-128.png"
-  },
+  }
 }

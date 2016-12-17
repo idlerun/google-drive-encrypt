@@ -4,12 +4,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import params from './components/params';
+import Crypto from './components/crypto';
+window.Crypto = Crypto;
 
 import {CLIENT_ID} from './components/constants';
 
 import Open from './open';
 import New from './new';
 import Faq from './faq';
+import Tos from './tos';
 import Usage from './usage';
 
 function getScopes() {
@@ -40,6 +43,8 @@ var Main = React.createClass({
     const hash = window.location.hash;
     if (hash == '#faq') {
       page = 'faq';
+    } else if (hash == '#tos') {
+      page = 'tos';
     } else if (hash == '#usage') {
       page = 'usage';
     }
@@ -82,13 +87,14 @@ var Main = React.createClass({
 
 
   render() {
-
     // lamest page routing in the world
     var content;
     if (this.state.page == 'faq') {
       content = <Faq/>
     } else if (this.state.page == 'usage') {
       content = <Usage/>
+    } else if (this.state.page == 'tos') {
+      content = <Tos/>
     } else {
       if (this.state.auth == undefined) {
         // wait until auth state is loaded
@@ -151,8 +157,8 @@ var Main = React.createClass({
         <div onClick={()=>{window.location="https://drive-encrypt.com"}} id='heading'>
           <img src="icon.png"/>
           <div>
-            <h1>Drive Encryption</h1>
-            <p>Store encrypted files in your Google Drive™</p>
+            <h1>Secure File Encryption</h1>
+            <p>Safely store private encrypted files in your Google Drive™</p>
           </div>
         </div>
 
