@@ -114,6 +114,10 @@ var Main = React.createClass({
                   <p>
                     Head over to your Google Drive to get started
                   </p>
+                  <div className="miniUsage">
+                    <img style={{width:"200px"}} src="usage/drive-new-mini.png"/>
+                    <img style={{margin: "20px 20px 0 0",display:"inline-block",width:"250px"}} src="usage/drive-open-mini.png"/>
+                  </div>
                 </a>
                 <div className="usageFaqBlock">
                   <a href='#usage'>Usage Guide</a>
