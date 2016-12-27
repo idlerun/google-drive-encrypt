@@ -14,6 +14,7 @@ import New from './new';
 import Faq from './faq';
 import Tos from './tos';
 import Usage from './usage';
+import Why from './why';
 
 function getScopes() {
   var scopes = ['https://www.googleapis.com/auth/drive'];
@@ -32,51 +33,67 @@ var Main = React.createClass({
   },
 
   componentWillMount() {
-    $(window).load(this.init);
     window.addEventListener('hashchange', this.hashChanged, false);
     this.hashChanged();
+    $(window).load(() => {
+      gapi.client.init({
+        'clientId': CLIENT_ID,
+        'scope': getScopes()
+      }).then(() => {
+        this.authorize(true);
+      });
+    });
   },
 
 
   hashChanged() {
     var page = undefined;
-    const hash = window.location.hash;
-    if (hash == '#faq') {
-      page = 'faq';
-    } else if (hash == '#tos') {
-      page = 'tos';
-    } else if (hash == '#usage') {
-      page = 'usage';
+    if (!params.action) {
+      const hash = location.hash;
+      if (hash == '#faq') {
+        page = 'faq';
+      } else if (hash == '#tos') {
+        page = 'tos';
+      } else if (hash == '#usage') {
+        page = 'usage';
+      } else if (hash == '#why') {
+        page = 'why';
+      }
     }
     this.setState({page});
   },
 
 
-  authorize(immediate, cb) {
+  authorize(immediate) {
     //console.log("Auth with immediate=",immediate);
     return gapi.auth.authorize({
         'client_id': CLIENT_ID,
         'scope': getScopes(),
         'immediate': immediate,
-        'response_type':'token'}, cb)
+        'response_type':'token'},
+        this.handleAuthResult)
   },
 
-  init() {
-    gapi.client.init({
-      'clientId': CLIENT_ID,
-      'scope': getScopes()
-    }).then(() => {
-      this.authorize(true, this.handleAuthResult);
-    });
-  },
 
   handleAuthResult(authResult) {
     //console.log("handleAuthResult", authResult);
     var authorizeDiv = document.getElementById('authorize-div');
     if (authResult && !authResult.error) {
-      gapi.client.load('drive', 'v3', () => {this.setState({auth:authResult})});
+      gapi.client.load('drive', 'v3', () => {
+        this.setState({auth:authResult});
+      });
     } else {
       this.setState({auth:false});
+    }
+  },
+
+
+  recordPage(page) {
+    if (this.state.recordedPage != page) {
+      ga('send', 'pageview', page);
+      setTimeout(() => {
+        this.setState({recordedPage:page});
+      }, 0);
     }
   },
 
@@ -90,11 +107,17 @@ var Main = React.createClass({
     // lamest page routing in the world
     var content;
     if (this.state.page == 'faq') {
+      this.recordPage('faq');
       content = <Faq/>
     } else if (this.state.page == 'usage') {
+      this.recordPage('usage');
       content = <Usage/>
     } else if (this.state.page == 'tos') {
+      this.recordPage('tos');
       content = <Tos/>
+    } else if (this.state.page == 'why') {
+      this.recordPage('why');
+      content = <Why auth={this.state.auth}/>
     } else {
       if (this.state.auth == undefined) {
         // wait until auth state is loaded
@@ -102,10 +125,13 @@ var Main = React.createClass({
       } else {
         if (this.state.auth) {
           if (params.action == 'open') {
+            this.recordPage('open');
             content = (<Open/>);
           } else if (params.action == 'create') {
+            this.recordPage('create');
             content = (<New/>);
           } else {
+            this.recordPage('ready');
             content = (
               <div>
                 <h2>Ready for Encryption!</h2>
@@ -120,6 +146,7 @@ var Main = React.createClass({
                   </div>
                 </a>
                 <div className="usageFaqBlock">
+                  <a href='#why'>Why do I want this?</a>
                   <a href='#usage'>Usage Guide</a>
                   <a href='#faq'>Frequently Asked Questions</a>
                 </div>
@@ -127,9 +154,11 @@ var Main = React.createClass({
             )
           }
         } else {
+          this.recordPage('auth');
           content = (
             <div>
               <h2>Authentication Required</h2>
+
               <a href="#" onClick={this.startAuth} className="toDrive">
                 <img src="drive_logo.png"/>
                 <p>
@@ -137,6 +166,7 @@ var Main = React.createClass({
                 </p>
               </a>
               <div className="usageFaqBlock">
+                <a href='#why'>Why do I want this?</a>
                 <a href='#usage'>Usage Guide</a>
                 <a href='#faq'>Frequently Asked Questions</a>
               </div>
@@ -158,13 +188,13 @@ var Main = React.createClass({
 
     return (
       <div>
-        <div onClick={()=>{window.location="https://drive-encrypt.com"}} id='heading'>
+        <a href='/#' id='heading'>
           <img src="icon.png"/>
           <div>
             <h1>Secure File Encryption</h1>
             <p>Safely store private encrypted files in your Google Drive™</p>
           </div>
-        </div>
+        </a>
 
         <div id='content'>
           {content}

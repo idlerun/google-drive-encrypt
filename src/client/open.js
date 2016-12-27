@@ -129,7 +129,16 @@ module.exports = React.createClass({
 
 
   decryptName(item, key) {
-    return Crypto.decryptStr(key, item.meta.properties.salt, item.meta.properties.enc_name);
+    var name = item.meta.properties.enc_name;
+    for(var i=1; i<100; i++) {
+      const key = 'enc_name(' + i + ')';
+      if (key in item.meta.properties) {
+        name += item.meta.properties[key];
+      } else {
+        break;
+      }
+    }
+    return Crypto.decryptStr(key, item.meta.properties.salt, name);
   },
 
 
@@ -147,7 +156,7 @@ module.exports = React.createClass({
             <tr key={item.id}>
               <td>{item.meta.name}</td>
               <td>Password OK!</td>
-              <td><a className="encLink" href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
+              <td alt='foo'><a className="encLink" href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
             </tr>);
         } else {
           rows.push(
@@ -184,9 +193,9 @@ module.exports = React.createClass({
           <table className="dl-list">
             <thead>
               <tr>
-                <th style={{minWidth: "160px"}}>File</th>
-                <th style={{minWidth: "160px"}}>Status</th>
-                <th style={{minWidth: "160px"}}>Download</th>
+                <th>File</th>
+                <th>Status</th>
+                <th>Download</th>
               </tr>
             </thead>
             <tbody>{rows}</tbody>

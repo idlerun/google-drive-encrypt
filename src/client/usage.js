@@ -12,7 +12,7 @@ module.exports = React.createClass({
           <div className="details">
             <ul>
               <li>Visit <a href="https://drive.google.com">drive.google.com</a> and open the folder to which you want to upload</li>
-              <li>Under the "New" menu, choose "More" then "Drive Encryption"</li>
+              <li>Under the "New" menu, choose "More" then "Secure File Encryption"</li>
             </ul>
             <img src="usage/drive-new.png"/>
           </div>
@@ -32,7 +32,7 @@ module.exports = React.createClass({
           <div className="details">
             <ul>
               <li>In Google Drive, select the '.enc' extension file(s) you would like to access</li>
-              <li>Right click and choose "Open with" then "Drive Encryption"</li>
+              <li>Right click and choose "Open with" then "Secure File Encryption"</li>
             </ul>
             <img src="usage/drive-open.png"/>
           </div>

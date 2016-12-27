@@ -29,20 +29,45 @@ module.exports = React.createClass({
           Crypto.random().substr(48) + ".enc" :
           file.name + ".enc";
     const enc_name = Crypto.encryptStr(key, salt, file.name);
-    const metadata = { name:entry.dstName, parents: [params.folderId],
-        properties: {
-          salt, key_hash, enc_name
-        }};
+    var properties = {
+      salt, key_hash, enc_name
+    };
+
+    // Split enc_name over multiply props to respect max key.length + value.length = 124
+    const enc_name_parts = enc_name.match(/.{1,110}/g);
+    properties['enc_name'] = enc_name_parts[0];
+    for(var i=1; i<enc_name_parts.length; i++) {
+      properties['enc_name(' + i + ')'] = enc_name_parts[i];
+    }
+    
+    const metadata = { name:entry.dstName, parents: [params.folderId], properties };
     const upl = new Upload({
       token: gapi.auth.getToken().access_token,
       key, iv:salt, file, metadata,
-      onComplete: this.onComplete, onError:console.log, onProgress:this.onProgress});
+      onComplete: this.onComplete, onError:this.onError.bind(this,entry), onProgress:this.onProgress});
     upl.upload();
   },
 
 
+  onError(entry, errStr) {
+    const err = JSON.parse(errStr);
+    const message = err['error']['message'];
+    const code = err['error']['code'];
+    if (console){
+      console.log("Upload error", "code=", code, "message=", message);
+    }
+    entry.state = "Failed (" + code + ")";
+    this.state.uploads[this.state.uploadIdx].progress = undefined;
+    this.state.uploadIdx = this.state.uploadIdx + 1;
+    this.forceUpdate();
+  },
+
+
   onDrop(acceptedFiles, rejectedFiles) {
-    const pending = acceptedFiles.map(file => { return {file, state: "Pending" }});
+    const pending = acceptedFiles.map(file => { return {
+      file,
+      state: "Pending"
+    }});
     this.setState({uploads: this.state.uploads.concat(pending)});
   },
 

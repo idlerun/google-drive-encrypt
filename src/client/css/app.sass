@@ -39,20 +39,26 @@ a.toDrive
     background-color: #eef;
 
 div.miniUsage
+  vertical-align: top;
   img
     vertical-align: top;
     margin: 20px 20px 0 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
     display: inline-block;
 
 .usageFaqBlock
-  margin-top: 20px;
+  margin-top: 15px;
   a
     background-color: #f5f5f5;
     border-radius: 10px;
     margin: 10px 10px 0 0;
-    font-size: 20px;
+    &:last-of-type
+      margin: 10px 0 0 0;
+    font-size: 17.915px;
     display: inline-block;
-    padding: 15px;
+    padding: 10px;
     border: 2px solid #e0e0e0;
     color: #333;
     &:hover
@@ -80,8 +86,11 @@ a
     text-decoration: underline;
 
 #heading
+  &:hover
+    text-decoration: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
+  display: block;
   user-select: none;
   cursor: pointer;
   margin: 30px;
@@ -99,6 +108,11 @@ a
     color: #444;
     font-size: 17px;
     margin-top: 0.5em;
+  &:hover
+    h1
+      color: #000
+    p
+      color: #000;
 
 #content
   background-color: #fbfbfb;
@@ -174,6 +188,9 @@ label
     font-size: 20px;
   table
     width: 100%;
+    td
+      max-width: 180px;
+      overflow: hidden;
 
 .dz-active
   border-style: solid;
@@ -189,6 +206,12 @@ label
   text-decoration: underline;
 
 .dl-list
+  th, td
+    max-width: 160px;
+    min-width: 160px;
+    overflow: hidden;
+    &::after
+      content: attr(alt);
   th:not(:last-child), td:not(:last-child)
     white-space: nowrap;
 
