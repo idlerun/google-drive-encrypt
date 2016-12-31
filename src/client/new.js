@@ -23,14 +23,15 @@ module.exports = React.createClass({
   upload(entry) {
     const file = entry.file;
     const salt = Crypto.random();
-    const key = Crypto.secure_hash(this.state.password, salt);
+    const iterations = 2000;
+    const key = Crypto.secure_hash(this.state.password, salt, iterations);
     const key_hash = Crypto.hash(key);
     entry.dstName = this.state.randomName ? 
           Crypto.random().substr(48) + ".enc" :
           file.name + ".enc";
     const enc_name = Crypto.encryptStr(key, salt, file.name);
     var properties = {
-      salt, key_hash, enc_name
+      salt, key_hash, enc_name, iterations
     };
 
     // Split enc_name over multiply props to respect max key.length + value.length = 124

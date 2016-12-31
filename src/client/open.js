@@ -4,7 +4,10 @@ import params from './components/params'
 import {CLIENT_ID} from './components/constants'
 import StreamSaver from './vendor/StreamSaver';
 
+import Performance from './components/performance'
+
 const Crypto = require('./components/crypto');
+
 
 module.exports = React.createClass({
 
@@ -73,9 +76,8 @@ module.exports = React.createClass({
   },
 
 
-  decrypt(item) {
+  decrypt(item, key) {
     fetch("https://www.googleapis.com/drive/v3/files/" + item.id + "/?alt=media", this.gapiParams()).then(res => {
-      const key = this.keyFor(item);
       const name = this.decryptName(item, key);
       const fileStream = StreamSaver.createWriteStream(name)
       const decryptor = Crypto.encryptor(key, item.meta.properties.salt)
@@ -114,7 +116,14 @@ module.exports = React.createClass({
 
   keyFor(item) {
     const salt = item.meta.properties.salt;
-    return Crypto.secure_hash(this.state.password, salt)
+    var iterations = 128;
+    if ('iterations' in item.meta.properties) {
+      iterations = parseInt(item.meta.properties.iterations);
+    }
+    //Crypto.secure_hash(this.state.password, salt, iterations);
+    return Performance.profile("secure_hash(" + iterations + ")", ()=>{
+      return Crypto.secure_hash(this.state.password, salt, iterations);
+    });
   },
 
 
@@ -156,7 +165,7 @@ module.exports = React.createClass({
             <tr key={item.id}>
               <td>{item.meta.name}</td>
               <td>Password OK!</td>
-              <td><a className="encLink" href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
+              <td><a className="encLink" href="#" onClick={this.decrypt.bind(this,item,key)}>{decName}</a></td>
             </tr>);
         } else {
           rows.push(

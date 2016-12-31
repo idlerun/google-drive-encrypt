@@ -22,11 +22,6 @@ h3
     margin-top: 0.5em;
 
 a.toDrive
-  img
-    display: block;
-  p
-    font-weight: bold;
-    margin: 10px 0 0 0;
   display: block;
   padding: 30px;
   border-radius: 10px;
@@ -38,13 +33,29 @@ a.toDrive
     border: 2px solid #d0d0d0;
     background-color: #eef;
 
-div.miniUsage
+.driveLink
+  position: relative;
   vertical-align: top;
   img
+    position: absolute;
+    top: 0px;
+    display: inline-block;
+  span
+    margin: 5px 10px 0 0;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 130%;
+
+div.miniUsage
+  margin-top: 40px;
+  vertical-align: top;
+  h3
+    font-size: 120%;
+    margin: 10px 0 0 0;
+  img
+    width: 100%;
     vertical-align: top;
-    margin: 20px 20px 0 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
+    margin: 0 0 0 0;
     padding: 10px;
     display: inline-block;
 
@@ -190,7 +201,8 @@ label
     width: 100%;
     td
       max-width: 180px;
-      overflow: hidden;
+      word-wrap: break-word;
+      white-space: normal;
 
 .dz-active
   border-style: solid;
@@ -207,11 +219,10 @@ label
 
 .dl-list
   th, td
-    max-width: 160px;
+    max-width: 200px;
     min-width: 160px;
-    overflow: hidden;
-  th:not(:last-child), td:not(:last-child)
-    white-space: nowrap;
+    word-wrap: break-word;
+    white-space: normal;
 
   th:last-child, td:last-child
       width: 100%;

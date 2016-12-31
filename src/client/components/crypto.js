@@ -105,11 +105,11 @@ function random() {
   return CryptoJS.lib.WordArray.random(256/8).toString(CryptoJS.enc.Hex);
 }
 
-function secure_hash(data, salt) {
+function secure_hash(data, salt, iterations) {
   return CryptoJS.PBKDF2(
       data,
       CryptoJS.enc.Hex.parse(salt),
-      { keySize: 256/32, iterations: 128 }
+      { keySize: 256/32, iterations }
   ).toString(CryptoJS.enc.Hex);
 }
 

@@ -5,7 +5,9 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import params from './components/params';
 import Crypto from './components/crypto';
-window.Crypto = Crypto;
+
+//window.Crypto = Crypto;
+//window.CryptoJS = require("crypto-js");
 
 import {CLIENT_ID} from './components/constants';
 
@@ -136,13 +138,17 @@ var Main = React.createClass({
               <div>
                 <h2>Ready for Encryption!</h2>
                 <a className="toDrive" href="https://drive.google.com">
-                  <img src="drive_logo.png"/>
-                  <p>
-                    Head over to your Google Drive to get started
-                  </p>
+                  <div className="driveLink">
+                    <span>
+                      To get started, head over to
+                    </span>
+                    <img src="drive_logo.png"/>
+                  </div>
                   <div className="miniUsage">
-                    <img style={{width:"200px"}} src="usage/drive-new-mini.png"/>
-                    <img style={{margin: "20px 20px 0 0",display:"inline-block",width:"250px"}} src="usage/drive-open-mini.png"/>
+                    <h3>To create a file:</h3>
+                    <img src="usage/drive-new-mini.png"/>
+                    <h3>To open a file:</h3>
+                    <img src="usage/drive-open-mini.png"/>
                   </div>
                 </a>
                 <div className="usageFaqBlock">
