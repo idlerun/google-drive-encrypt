@@ -156,7 +156,7 @@ module.exports = React.createClass({
             <tr key={item.id}>
               <td>{item.meta.name}</td>
               <td>Password OK!</td>
-              <td alt='foo'><a className="encLink" href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
+              <td><a className="encLink" href="#" onClick={this.decrypt.bind(this,item)}>{decName}</a></td>
             </tr>);
         } else {
           rows.push(
