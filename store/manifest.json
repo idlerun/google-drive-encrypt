@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Secure File Encryption",
-  "description": "Safely store private files in your Google Drive by protecting them with bank-grade encryption (unlimited file size)",
-  "version": "1.0.4",
+  "description": "Safely store private files in your Google Drive",
+  "version": "1.0.5",
   "container": ["GOOGLE_DRIVE", "DOMAIN_INSTALLABLE"],
   "api_console_project_id": "464708669615",
   "gdrive_mime_types": {
