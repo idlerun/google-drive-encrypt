@@ -37,7 +37,7 @@ var Main = React.createClass({
   componentWillMount() {
     window.addEventListener('hashchange', this.hashChanged, false);
     this.hashChanged();
-    $(window).load(() => {
+    $(window).on('load', () => {
       gapi.client.init({
         'clientId': CLIENT_ID,
         'scope': getScopes()
@@ -137,18 +137,18 @@ var Main = React.createClass({
             content = (
               <div>
                 <h2>Ready for Encryption!</h2>
-                <a className="toDrive" href="https://drive.google.com">
+                <a className="toDriveReady" href="https://drive.google.com">
                   <div className="driveLink">
                     <span>
-                      To get started, head over to
+                      Click here to visit your 
                     </span>
                     <img src="drive_logo.png"/>
                   </div>
                   <div className="miniUsage">
-                    <h3>To create a file:</h3>
-                    <img src="usage/drive-new-mini.png"/>
-                    <h3>To open a file:</h3>
-                    <img src="usage/drive-open-mini.png"/>
+                    <h4>To create a file:</h4>
+                    <img style={{width: "300px"}} src="usage/drive-new-mini.png"/>
+                    <h4>To open a file:</h4>
+                    <img style={{width: "350px"}} src="usage/drive-open-mini.png"/>
                   </div>
                 </a>
                 <div className="usageFaqBlock">
@@ -161,16 +161,23 @@ var Main = React.createClass({
           }
         } else {
           this.recordPage('auth');
+
+          //<img src="drive_logo.png"/>
           content = (
-            <div>
-              <h2>Authentication Required</h2>
+            <div className="authPage">
+              <div>
+                <h3>Welcome!</h3>
+                <p>
+                  Upload a file to Google Drive; it will be encrypted before it leaves your computer!
+                </p>
+                <a href="flow.png"><img src="flow.png"/></a>
+              </div>
 
               <a href="#" onClick={this.startAuth} className="toDrive">
-                <img src="drive_logo.png"/>
-                <p>
-                  Click here to authenticate with your Google Drive
-                </p>
+                <span>Click here to get started!</span>
+                <img src="drive_icon.png"/>
               </a>
+              <h3 style={{marginTop: "30px"}}>More info:</h3>
               <div className="usageFaqBlock">
                 <a href='#why'>Why do I want this?</a>
                 <a href='#usage'>Usage Guide</a>

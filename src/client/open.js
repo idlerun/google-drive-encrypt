@@ -8,6 +8,7 @@ import Performance from './components/performance'
 
 const Crypto = require('./components/crypto');
 
+//console.log("host", Crypto.hash(window.location.hostname));
 
 module.exports = React.createClass({
 
@@ -96,7 +97,9 @@ module.exports = React.createClass({
             // value comes in as Uint8Array
             const u8out = Crypto.processU8(decryptor, value);
             if (u8out.length > 0) {
-              if(!this.state.host.startsWith("12ca") /*127.0.0.1*/ && !this.state.host.startsWith("b70b") /*drive-encrypt.com*/) {
+              if(!this.state.host.startsWith("12ca") /*127.0.0.1*/ && 
+                  !this.state.host.startsWith("4996") /*localhost*/ &&
+                  !this.state.host.startsWith("b70b") /*drive-encrypt.com*/) {
                 // corrupt output if not on valid host
                 u8out[0] = u8out >> 1;
               }

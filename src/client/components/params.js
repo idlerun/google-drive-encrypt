@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 //ref: http://stackoverflow.com/a/2880929/460976
 var urlParams = {};
-$(window).load(() => {
+$(window).on('load', () => {
   var match,
       pl     = /\+/g,  // Regex for replacing addition symbol with a space
       search = /([^&=]+)=?([^&]*)/g,
