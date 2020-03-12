@@ -152,6 +152,15 @@ module.exports = React.createClass({
     }
     return Crypto.decryptStr(key, item.meta.properties.salt, name);
   },
+  
+  
+  renderBrowserWarning() {
+    if (navigator.userAgent.indexOf('Safari') >= 0) {
+      return (<p className="warning">WARNING: Download is currently only supported on Google Chrome (see FAQ)</p>)
+    } else {
+      return undefined
+    }
+  },
 
 
   render() {
@@ -192,6 +201,8 @@ module.exports = React.createClass({
       <div>
         <h2>File Download</h2>
         <div>
+        
+          {this.renderBrowserWarning()}
 
           <div>
             <div className="textPrompt">

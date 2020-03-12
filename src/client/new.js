@@ -93,6 +93,14 @@ module.exports = React.createClass({
   canStart() {
     return this.state.uploads.length > 0 && this.state.password.length > 0;
   },
+  
+  renderBrowserWarning() {
+    if (navigator.userAgent.indexOf('Chrome') == -1) {
+      return (<p className="warning">WARNING: Download is currently only supported on Google Chrome (see FAQ)</p>)
+    } else {
+      return undefined
+    }
+  },
 
 
   render() {
@@ -155,6 +163,7 @@ module.exports = React.createClass({
       <div>
         <h2>File Upload</h2>
         <div>
+          {this.renderBrowserWarning()}
           <div className="textPrompt">
             <label>Password</label>
             <input type="password" value={this.state.password}

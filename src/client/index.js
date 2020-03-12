@@ -19,10 +19,8 @@ import Usage from './usage';
 import Why from './why';
 
 function getScopes() {
-  var scopes = ['https://www.googleapis.com/auth/drive'];
-  if(!chrome || !chrome.app.isInstalled) {
-    scopes.push('https://www.googleapis.com/auth/drive.install');
-  }
+  var scopes = ['https://www.googleapis.com/auth/drive',
+                'https://www.googleapis.com/auth/drive.install'];
   return scopes.join(' ');
 }
 
@@ -188,16 +186,6 @@ var Main = React.createClass({
         }
       }
     }
-
-    /*
-        <div style={{display: chrome.app.isInstalled ? 'none' : 'block'}}>
-          <button onClick={chrome.webstore.install}>Add to Chrome</button>
-        </div>
-
-        <div style={{display: chrome.app.isInstalled ? 'block' : 'none'}}>
-          Chrome App is installed!
-        </div>
-    */
 
     return (
       <div>

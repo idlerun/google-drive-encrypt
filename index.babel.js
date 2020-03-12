@@ -3,9 +3,12 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import https from 'https';
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 8000;
+const httpsPort = process.env.HTTPS_PORT || 8443;
 
 app.set('port', port);
 app.set('trust_proxy', 1);
@@ -39,6 +42,16 @@ if (isDevelopment) {
     res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'dist/index.html')));
     res.end();
   });
+  
+  const options = {
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+  };
+  
+  https.createServer(options, app).listen(httpsPort, function () {
+    console.log(`Listening for HTTPS on port ${httpsPort}`)
+  })
+  
 } else {
   app.use('/', express.static(path.resolve(__dirname, 'dist')));
   app.get('', function response(req, res) {
