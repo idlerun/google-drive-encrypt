@@ -155,7 +155,7 @@ module.exports = React.createClass({
   
   
   renderBrowserWarning() {
-    if (navigator.userAgent.indexOf('Safari') >= 0) {
+    if (navigator.userAgent.indexOf('Chrome') == -1) {
       return (<p className="warning">WARNING: Download is currently only supported on Google Chrome (see FAQ)</p>)
     } else {
       return undefined

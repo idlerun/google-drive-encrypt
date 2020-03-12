@@ -32,14 +32,14 @@ module.exports = React.createClass({
           <p>
             Currently only Google Chrome is known to work well for the streaming download.
             We are using some complex browser support for the direct-to-browser streaming decryption download which makes browser support non-trivial.
-            It may be possible to add support for additional browsers in the future.            
+            It may be possible to add support for additional browsers in the future.
           </p>
         </div>
         
         <div>
           <h3>What happens to my data if the service goes away some day?</h3>
           <p>
-            Offline decryption code and instructions are available on github: <a href="https://github.com/idlerun/offline-decrypt">https://github.com/idlerun/offline-decrypt</a>
+            Offline decryption code and instructions are available on github:<br/><a href="https://github.com/idlerun/offline-decrypt">https://github.com/idlerun/offline-decrypt</a>
           </p>
         </div>
 
@@ -50,7 +50,7 @@ module.exports = React.createClass({
           </p>
           <p>Web savvy users can check the Networking tab in debugging tools to verify what data is leaving the browser</p>
           <p>
-            Also feel free to inspect the source code:
+            Also feel free to inspect the source code:<br/>
             <a href="https://github.com/idlerun/google-drive-encrypt">
             https://github.com/idlerun/google-drive-encrypt</a>
           </p>
