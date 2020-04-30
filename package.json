@@ -39,7 +39,7 @@
     "file-loader": "5.1.0",
     "fs": "0.0.2",
     "ignore-loader": "0.1.2",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
     "log-timestamp": "0.3.0",
